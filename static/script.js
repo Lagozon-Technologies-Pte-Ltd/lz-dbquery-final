@@ -5,6 +5,18 @@ let isRecording = false;
 let mediaRecorder;
 let audioChunks = [];
 let originalButtonHTML = ""; // Store the original button HTML
+window.onload = function () {
+    // Reset variables
+    const loadingDiv = document.getElementById('loading');
+    let tableName = undefined;
+    let isRecording = false;
+    let mediaRecorder = undefined;
+    let audioChunks = [];
+    let originalButtonHTML = "";
+
+    console.log("Variables reset on page reload");
+};
+
 async function loadTableColumns(table_name) {
     console.log("Loading columns for table:", table_name); // Debug statement
     const selectedTable = table_name;
