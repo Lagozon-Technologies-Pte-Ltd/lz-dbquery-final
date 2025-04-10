@@ -318,12 +318,15 @@ document.getElementById("table-dropdown")?.addEventListener("change", (event) =>
 /**
  * Resets the session state by making a POST request to the backend and clearing client-side data.
  */
+/**
+ * Resets the session state by making a POST request to the backend.
+ */
 function resetSession() {
     fetch('/reset-session', { method: 'POST' })
         .then(response => {
             if (response.ok) {
                 alert("Session reset successfully!");
-                clearClientSideData(); // Call function to clear client-side data
+                clearDataVariables(); // Call function to clear data variables
             } else {
                 alert("Failed to reset session.");
             }
@@ -332,61 +335,18 @@ function resetSession() {
 }
 
 /**
- * Clears all client-side variables and UI elements that hold session-specific data.
+ * Clears the data variables without modifying the UI.
  */
-function clearClientSideData() {
-    // Reset global variables
+function clearDataVariables() {
     tableName = undefined;
     isRecording = false;
     mediaRecorder = undefined;
     audioChunks = [];
     originalButtonHTML = "";
 
-    // Clear chat messages
-    const chatMessages = document.getElementById("chat-messages");
-    chatMessages.innerHTML = "";
-
-    // Clear SQL query content
-    const sqlQueryContent = document.getElementById("sql-query-content");
-    if (sqlQueryContent) {
-        sqlQueryContent.textContent = "";
-    }
-
-    // Clear table-related UI
-    const tablesContainer = document.getElementById("tables_container");
-    if (tablesContainer) {
-        tablesContainer.innerHTML = "";
-    }
-
-    // Reset dropdowns
-    resetDropdown("x-axis-dropdown");
-    resetDropdown("y-axis-dropdown");
-
-    // Clear user query input
-    const userQueryInput = document.getElementById("chat_user_query");
-    if (userQueryInput) {
-        userQueryInput.value = "";
-    }
-
-    // Hide query results
-    const queryResultsDiv = document.getElementById('query-results');
-    if (queryResultsDiv) {
-        queryResultsDiv.style.display = "none";
-    }
-
-    console.log("Client-side data cleared.");
+    console.log("Data variables cleared.");
 }
 
-/**
- * Helper function to reset a dropdown list to its default state.
- * @param {string} dropdownId - The ID of the dropdown element.
- */
-function resetDropdown(dropdownId) {
-    const dropdown = document.getElementById(dropdownId);
-    if (dropdown) {
-        dropdown.innerHTML = '<option value="" disabled selected>Select Option</option>';
-    }
-}
 
 
 async function fetchQuestions(selectedSection) {
