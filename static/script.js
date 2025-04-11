@@ -5,6 +5,7 @@ let isRecording = false;
 let mediaRecorder;
 let audioChunks = [];
 let originalButtonHTML = ""; // Store the original button HTML
+
 window.onload = function () {
     // Reset variables
     const loadingDiv = document.getElementById('loading');
@@ -315,39 +316,19 @@ document.getElementById("table-dropdown")?.addEventListener("change", (event) =>
 /**
  * Resets the session state by making a POST request to the backend.
  */
-/**
- * Resets the session state by making a POST request to the backend and clearing client-side data.
- */
-/**
- * Resets the session state by making a POST request to the backend.
- */
 function resetSession() {
     fetch('/reset-session', { method: 'POST' })
         .then(response => {
             if (response.ok) {
                 alert("Session reset successfully!");
-                clearDataVariables(); // Call function to clear data variables
+                // Optionally, reload the page to ensure all UI elements are reset
+                location.reload();
             } else {
                 alert("Failed to reset session.");
             }
         })
         .catch(error => console.error("Error resetting session:", error));
 }
-
-/**
- * Clears the data variables without modifying the UI.
- */
-function clearDataVariables() {
-    tableName = undefined;
-    isRecording = false;
-    mediaRecorder = undefined;
-    audioChunks = [];
-    originalButtonHTML = "";
-
-    console.log("Data variables cleared.");
-}
-
-
 
 async function fetchQuestions(selectedSection) {
     const questionDropdown = document.getElementById("faq-questions"); // Get datalist
