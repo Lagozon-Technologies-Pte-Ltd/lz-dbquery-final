@@ -389,7 +389,7 @@ function updatePageContent(data) {
     const tablesContainer = document.getElementById("tables_container");
     const xlsxbtn = document.getElementById("xlsx-btn"); // Excel button container
     const emailbtn = document.getElementById("email-btn"); // Excel button container
-    const faqbtn =  document.getElementById("add-to-faqs-btn");
+    const faqbtn = document.getElementById("add-to-faqs-btn");
     // Update user query text
     userQueryDisplay.querySelector('span').textContent = data.user_query || "";
 
@@ -428,7 +428,24 @@ function updatePageContent(data) {
     } else {
         tablesContainer.innerHTML = "<p>No tables to display.</p>";
     }
+    // Add copy button in top-right of popup
+    const copyButton = document.createElement('button');
+    copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+    copyButton.className = 'copy-btn-popup';
+    copyButton.addEventListener('click', () => {
+        const sqlQueryText = document.getElementById("sql-query-content").textContent;
+        navigator.clipboard.writeText(sqlQueryText)
+            .then(() => {
+                alert('SQL query copied to clipboard!');
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy SQL query to clipboard.');
+            });
+    });
 
+    // Ensure this is inside the modal
+    sqlQueryContent.parentNode.appendChild(copyButton);
     // Add the "View SQL Query" button BELOW the Download Excel button
     if (data.query) {
         sqlQueryContent.textContent = data.query;
@@ -444,7 +461,7 @@ function updatePageContent(data) {
         faqBtn.id = "add-to-faqs-btn";
         faqBtn.onclick = addToFAQs;
         faqBtn.style.display = "block"; // Ensure button appears in a new line
-        const emailbtn =  document.createElement("button");
+        const emailbtn = document.createElement("button");
         emailbtn.id = "send-email-btn";
 
         emailbtn.textContent = "Send Email";
@@ -558,12 +575,12 @@ function updatePaginationLinks(tableName, currentPage, totalPages, recordsPerPag
 
     // Next Button
     const nextLi = document.createElement("li");
-    
+
     // Enable Next button only if current page is less than total pages
     nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-    
+
     nextLi.innerHTML = `<a href="javascript:void(0);" onclick="${currentPage < totalPages ? `changePage('${tableName}', ${currentPage + 1}, ${recordsPerPage})` : 'return false;'}" class="page-link">Next »</a>`;
-    
+
     paginationList.appendChild(nextLi);
 
     paginationDiv.appendChild(paginationList);
