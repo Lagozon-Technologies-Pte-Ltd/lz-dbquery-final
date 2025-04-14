@@ -500,8 +500,9 @@ async def submit_query(
     records_per_page: int = Query(10),
     model: Optional[str] = Form("gpt-4o-mini")
 ):
+    logger.info(f"Received /submit request with query: {user_query}, section: {section}, page: {page}, records_per_page: {records_per_page}, model: {model}")
     if user_query.lower() == 'break':
-# Capture current state before reset
+        # Capture current state before reset
         response_data = {
             "user_query": user_query,
             "chat_response": "Session restarted",
@@ -511,7 +512,7 @@ async def submit_query(
         # Clear session state
         session_state.clear()
         session_state['messages'] = []  # Reinitialize messages array
-        
+        logger.info("Session restarted due to 'break' query.")
         return JSONResponse(content=response_data)        
     selected_subject = section
     session_state['user_query'] = user_query
@@ -522,12 +523,13 @@ async def submit_query(
     chat_history = "\n".join(
         f"{msg['role']}: {msg['content']}" for msg in session_state['messages'][-10:]
     )  # Keep last 10 messages for better context
-    print("chat history: ", chat_history)
+    logger.info(f"Chat history: {chat_history}")
     try:
         # **Step 1: Invoke Unified Prompt**
         unified_prompt = PROMPTS["unified_prompt"].format(user_query=user_query, chat_history=chat_history)
         response = llm.invoke(unified_prompt).content.strip()
-        print("response: ",response)
+        logger.info(f"LLM Unified Prompt Response: {response}")
+
         # **Step 2: Handle Response**
         # if not response.lower().startswith("database"):
         #     # ✅ Answer found in history → Return it directly
@@ -545,16 +547,19 @@ async def submit_query(
 
         if isinstance(response, str):
             session_state['generated_query'] = response
+            logger.info(f"Generated Query: {response}")
         else:
             session_state['chosen_tables'] = chosen_tables
             session_state['tables_data'] = tables_data
             sql_query = response.get("query", "")
             session_state['generated_query'] = sql_query
+            logger.info(f"SQL Query: {sql_query}")
 
         # **Step 4: Generate Insights (if data exists)**
         chat_insight = None
         if chosen_tables:
             data_preview = tables_data[chosen_tables[0]].head(5).to_string(index=False) if chosen_tables else "No Data"
+            logger.info(f"Data Preview: {data_preview}")
             
             insights_prompt = PROMPTS["insights_prompt"].format(
                 sql_query=sql_query,
@@ -562,6 +567,7 @@ async def submit_query(
             )
 
             chat_insight = llm.invoke(insights_prompt).content
+            logger.info(f"Chat Insight: {chat_insight}")
 
         # Append AI's response to chat history
         session_state['messages'].append({
@@ -570,7 +576,8 @@ async def submit_query(
         })
         for table_name, df in tables_data.items():
                     for col in df.select_dtypes(include=['number']).columns:
-                        tables_data[table_name][col] = df[col].apply(format_number)         # **Step 5: Prepare Table Data**
+                        tables_data[table_name][col] = df[col].apply(format_number)
+        # **Step 5: Prepare Table Data**
         tables_html = prepare_table_html(tables_data, page, records_per_page)
 
         # **Step 6: Append Table Data to Chat History**
@@ -588,10 +595,13 @@ async def submit_query(
             "chat_response": chat_insight,
             "history": session_state['messages']
         }
+        logger.info("Returning JSON response.")
         return JSONResponse(content=response_data)
 
     except Exception as e:
+        logger.error(f"Error processing the prompt: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing the prompt: {str(e)}")
+
 # Replace APIRouter with direct app.post
 
 @app.post("/reset-session")
