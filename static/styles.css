@@ -13,23 +13,6 @@ body {
     color: #21126b;
     font-size: 18px;
 }
-.copy-btn-popup {
-    position: absolute;
-    top: 10px;
-    right: 45px; /* A little left from the close (X) button */
-    font-size: 14px;
-    background: linear-gradient(180deg, rgb(221, 204.64, 249.26) 0%, rgb(255, 255, 255) 100%);;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.copy-btn-popup:hover {
-    background-color: #c7d2fe;
-}
-
 #xlsx-btn {
     display: flex;
     justify-content: center; /* Centers the buttons horizontally */
