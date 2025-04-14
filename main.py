@@ -520,9 +520,10 @@ async def submit_query(
     # Append user's message to chat history
     session_state['messages'].append({"role": "user", "content": user_query})
 
+    # Keep last 10 messages for better context
     chat_history = "\n".join(
         f"{msg['role']}: {msg['content']}" for msg in session_state['messages'][-10:]
-    )  # Keep last 10 messages for better context
+    )  
     logger.info(f"Chat history: {chat_history}")
     try:
         # **Step 1: Invoke Unified Prompt**
@@ -575,8 +576,9 @@ async def submit_query(
             "content": f" {chat_insight}\n\n"
         })
         for table_name, df in tables_data.items():
-                    for col in df.select_dtypes(include=['number']).columns:
-                        tables_data[table_name][col] = df[col].apply(format_number)
+            for col in df.select_dtypes(include=['number']).columns:
+                tables_data[table_name][col] = df[col].apply(format_number)
+
         # **Step 5: Prepare Table Data**
         tables_html = prepare_table_html(tables_data, page, records_per_page)
 
@@ -601,6 +603,7 @@ async def submit_query(
     except Exception as e:
         logger.error(f"Error processing the prompt: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error processing the prompt: {str(e)}")
+
 
 # Replace APIRouter with direct app.post
 
