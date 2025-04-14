@@ -19,11 +19,54 @@ from typing import Optional
 from starlette.middleware.sessions import SessionMiddleware  # Correct import
 from fastapi.middleware.cors import CORSMiddleware
 from azure.storage.blob import BlobServiceClient
+from starlette.middleware.base import BaseHTTPMiddleware
+import logging
+from logging.config import dictConfig
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
+class LoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # Log the request details
+        logging.info(f"Request: {request.method} {request.url}")
+        
+        # Call the next middleware or endpoint
+        response = await call_next(request)
+        
+        # Log the response details
+        logging.info(f"Response status: {response.status_code}")
+        
+        return response
+# Logging configuration
+LOGGING_CONFIG = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {"format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"},
+        "json": {"format": '{"timestamp": "%(asctime)s", "logger": "%(name)s", "level": "%(levelname)s", "message": "%(message)s"}'}
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "formatter": "default"},
+        "file": {"class": "logging.FileHandler", "filename": "app.log", "formatter": "json"}
+    },
+    "loggers": {
+        "uvicorn": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "app": {"handlers": ["console", "file"], "level": "DEBUG", "propagate": False}
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO"
+    }
+}
+dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger("app")
 
 load_dotenv()  # Load environment variables from .env file
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key="your-secret-key")
+app.add_middleware(LoggingMiddleware)
 
 # Set up static files and templates
 templates = Jinja2Templates(directory="templates")
@@ -369,8 +412,6 @@ async def transcribe_audio(file: UploadFile = File(...)):
         return JSONResponse(content={"error": f"Error transcribing audio: {str(e)}"}, status_code=500)
 
 @app.get("/get_questions")
-@app.get("/get_questions/")
-
 async def get_questions(subject: str):
     """
     Fetches questions from a CSV file in Azure Blob Storage based on the selected subject.
@@ -654,8 +695,6 @@ def display_table_with_styles(data, table_name, page_number, records_per_page):
 
 
 @app.get("/get_table_data/")
-@app.get("/get_table_data")
-
 async def get_table_data(
     table_name: str = Query(...),
     page_number: int = Query(1),
