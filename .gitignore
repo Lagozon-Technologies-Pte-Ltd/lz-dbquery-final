@@ -1,3 +1,5 @@
 /db_env
 .env
 dockerfile
+requirements.txt
+requirements.txt
