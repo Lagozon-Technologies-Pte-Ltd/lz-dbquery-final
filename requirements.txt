@@ -129,7 +129,7 @@ prompt-toolkit==3.0.43
 proto-plus==1.26.0
 protobuf==4.25.3
 psutil==5.9.8
-psycopg2==2.9.9
+psycopg2-binary==2.9.9
 pulsar-client==3.4.0
 pure-eval==0.2.2
 pyarrow==15.0.2
