@@ -528,22 +528,12 @@ async def submit_query(
     try:
         # **Step 1: Invoke Unified Prompt**
         unified_prompt = PROMPTS["unified_prompt"].format(user_query=user_query, chat_history=chat_history)
-        response = llm.invoke(unified_prompt).content.strip()
-        logger.info(f"LLM Unified Prompt Response: {response}")
+        llm_response = llm.invoke(unified_prompt).content.strip()
+        logger.info(f"LLM Unified Prompt Response: {llm_response}")
 
-        # **Step 2: Handle Response**
-        # if not response.lower().startswith("database"):
-        #     # ✅ Answer found in history → Return it directly
-        #     session_state['messages'].append({"role": "assistant", "content": response})
-        #     return JSONResponse(content={
-        #         "user_query": user_query,
-        #         "chat_response": response,
-        #         "history": session_state['messages']
-        #     })
-
-        # **Step 3: Continue to Database Query if Needed**
+       
         response, chosen_tables, tables_data, agent_executor = invoke_chain(
-            response, session_state['messages'], model, selected_subject
+            llm_response, session_state['messages'], model, selected_subject
         )
 
         if isinstance(response, str):
@@ -594,6 +584,7 @@ async def submit_query(
             "user_query": session_state['user_query'],
             "query": session_state['generated_query'],
             "tables": tables_html,
+            "llm_response": llm_response,
             "chat_response": chat_insight,
             "history": session_state['messages']
         }
