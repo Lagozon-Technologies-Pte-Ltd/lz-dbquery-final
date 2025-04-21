@@ -22,7 +22,7 @@ from azure.storage.blob import BlobServiceClient
 from starlette.middleware.base import BaseHTTPMiddleware
 import logging
 from logging.config import dictConfig
-
+from prompts import static_prompt
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
@@ -586,11 +586,11 @@ async def submit_query(
         tables_html = prepare_table_html(tables_data, page, records_per_page)
 
         # **Step 6: Append Table Data to Chat History**
-        if tables_html:
-            session_state['messages'].append({
-                "role": "table_data",
-                "content": f"\n{tables_data}"
-            })
+        # if tables_html:
+        #     session_state['messages'].append({
+        #         "role": "table_data",
+        #         "content": f"\n{tables_data}"
+        #     })
 
         # **Step 7: Return Response**
         response_data = {
@@ -599,7 +599,9 @@ async def submit_query(
             "tables": tables_html,
             "llm_response": llm_response,
             "chat_response": chat_insight,
-            "history": session_state['messages']
+            "history": session_state['messages'],
+            "interprompt":unified_prompt,
+            "langprompt": static_prompt
         }
         logger.info("Returning JSON response.")
         return JSONResponse(content=response_data)

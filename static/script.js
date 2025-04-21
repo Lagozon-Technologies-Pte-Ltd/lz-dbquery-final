@@ -234,7 +234,9 @@ async function sendMessage() {
             document.getElementById("sql-query-content").textContent = data.query;
             botResponse = data.chat_response || "Here's what I found:";
         }
-
+        console.log("interprompt: ", data.interprompt)
+        document.getElementById("lang-prompt-content").textContent = data.langprompt;
+        document.getElementById("interp-prompt-content").textContent = data.interprompt;
         chatMessages.innerHTML += `
             <div class="message ai-message">
                 <div class="message-content">
@@ -642,75 +644,18 @@ function closeSQLQueryPopup() {
     document.getElementById("sql-query-popup").style.display = "none";
 }
 function showLangPromptPopup() {
-    fetch('/static/final_prompt.txt')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
-            }
-            return response.text();
-        })
-        .then(text => {
-            // Set the fetched text into the popup content element
-            const popupContent = document.getElementById("prompt-content");
-            popupContent.textContent = text;
-
-            // Show the popup
-            document.getElementById("prompt-popup").style.display = "flex";
-
-            // Apply syntax highlighting if Prism is available
-            if (window.Prism) {
-                Prism.highlightAll();
-            }
-        })
-        .catch(error => {
-            console.error('Error loading text file:', error);
-            alert('Failed to load prompt text.');
-        });
+    document.getElementById("lang-prompt-popup").style.display = "flex";
 }
 
 
 // Function to close the popup
 function closepromptPopup() {
-    document.getElementById("prompt-popup").style.display = "none";
+    document.getElementById("lang-prompt-popup").style.display = "none";
 }
 function showinterPrompt() {
-    fetch('/static/chatbot_prompt.yaml')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
-            }
-            return response.text();
-        })
-        .then(text => {
-            // Parse YAML text to JavaScript object
-            let data;
-            try {
-                data = jsyaml.load(text);
-            } catch (e) {
-                console.error('YAML parsing error:', e);
-                alert('Failed to parse YAML content.');
-                return;
-            }
-
-            // Convert the object back to pretty JSON string for display
-            const prettyJson = JSON.stringify(data, null, 2);
-
-            // Set the pretty JSON into the popup content element
-            const popupContent = document.getElementById("prompt-content");
-            popupContent.textContent = prettyJson;
-
-            // Show the popup
-            document.getElementById("prompt-popup").style.display = "flex";
-
-            // Apply syntax highlighting if Prism is available
-            if (window.Prism) {
-                Prism.highlightAll();
-            }
-        })
-        .catch(error => {
-            console.error('Error loading text file:', error);
-            alert('Failed to load prompt text.');
-        });
+    document.getElementById("interp-prompt-popup").style.display = "flex";
 }
 
-
+function closeinterpromptPopup() {
+    document.getElementById("interp-prompt-popup").style.display = "none";
+}
