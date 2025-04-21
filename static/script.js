@@ -152,6 +152,38 @@ function openTab(evt, tabName) {
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementsByClassName("tablinks")[0].click(); // Open the first tab by default
 });
+function toggleDevMode() {
+    const devModeToggle = document.getElementById('devModeToggle');
+    const xlsxbtn = document.getElementById('xlsx-btn'); // Excel button container
+    let interpBtn = document.getElementById('interpBtn'); // check if the buttons already exist
+    let langchainBtn = document.getElementById('langchainBtn');
+
+    if (devModeToggle.checked) {
+        // Create buttons if they don't exist
+        if (!interpBtn) {
+            interpBtn = document.createElement('button');
+            interpBtn.id = 'interpBtn';
+            interpBtn.textContent = 'Interpretation Prompt';
+            interpBtn.className = 'dev-mode-btn';  // Add class for styling
+            xlsxbtn.appendChild(interpBtn);
+        }
+        if (!langchainBtn) {
+            langchainBtn = document.createElement('button');
+            langchainBtn.id = 'langchainBtn';
+            langchainBtn.textContent = 'Langchain Prompt';
+            langchainBtn.className = 'dev-mode-btn';  // Add class for styling
+            xlsxbtn.appendChild(langchainBtn);
+        }
+    } else {
+        // Remove buttons if they exist
+        if (interpBtn) {
+            interpBtn.remove();
+        }
+        if (langchainBtn) {
+            langchainBtn.remove();
+        }
+    }
+}
 
 
 async function sendMessage() {

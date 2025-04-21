@@ -13,28 +13,86 @@ body {
     color: #21126b;
     font-size: 18px;
 }
-.copy-btn-popup {
-    position: absolute;
-    top: 10px;
-    right: 45px; /* A little left from the close (X) button */
-    font-size: 14px;
-    background: radial-gradient(50% 50% at 50% 50%, rgb(183.48, 168.62, 249.71) 4%, rgb(136.38, 111.28, 248.21) 100%);
-    border: none;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+
+.query-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 
-.copy-btn-popup:hover {
-    background-color: #c7d2fe;
+.query-title {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Toggle section */
+.dev-mode-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Toggle switch styles */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background: radial-gradient(50% 50% at 50% 50%, rgb(183.48, 168.62, 249.71) 4%, rgb(136.38, 111.28, 248.21) 100%);;
+}
+
+input:checked+.slider:before {
+    transform: translateX(18px);
+}
+
+.dev-mode-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
 }
 
 #xlsx-btn {
     display: flex;
-    justify-content: center; /* Centers the buttons horizontally */
-    gap: 15px; /* Adds spacing between buttons */
-    margin-top: 15px; /* Adds spacing between the table and buttons */
+    justify-content: center;
+    /* Centers the buttons horizontally */
+    gap: 15px;
+    /* Adds spacing between buttons */
+    margin-top: 15px;
+    /* Adds spacing between the table and buttons */
 }
 
 #add-to-faqs-btn {
@@ -241,7 +299,7 @@ body {
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
     background: #f7f9fc;
     color: #4a5568;
-    outline: none;    
+    outline: none;
 }
 
 .chatinput-wrapper {
@@ -438,6 +496,46 @@ code.sql {
 
 
 }
+#interpBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    /* Space between icon and text */
+    background: radial-gradient(50% 50% at 50% 50%, rgb(183.48, 168.62, 249.71) 4%, rgb(136.38, 111.28, 248.21) 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    padding: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+
+}
+#langchainBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    /* Space between icon and text */
+    background: radial-gradient(50% 50% at 50% 50%, rgb(183.48, 168.62, 249.71) 4%, rgb(136.38, 111.28, 248.21) 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 15px;
+    padding: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+
+}
+
+
 #send-email-btn {
     display: flex;
     align-items: center;

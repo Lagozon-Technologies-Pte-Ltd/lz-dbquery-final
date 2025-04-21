@@ -30,7 +30,8 @@
                 Chat Assistant
                 <img src="static/reset.png" alt="Reset Session" class="reset-icon" onclick="resetSession()"
                     style="cursor: pointer; margin-left: 10px; width: 24px; height: 24px;">
-                    <p style="color: green; font-weight: 100; padding-left: 160px; font-size: 20px;">Connected to GCP Database</p>
+                <p style="color: green; font-weight: 100; padding-left: 160px; font-size: 20px;">Connected to GCP
+                    Database</p>
 
             </h2>
             <div id="unified-input-container">
@@ -85,7 +86,22 @@
 
         <!-- Query Results (Right Side) -->
         <div style="width:55%; padding: 15px;">
-            <h2>Query Details</h2>
+            <div class="query-details-header">
+                <h2 class="query-title">Query Details</h2>
+                <div class="dev-mode-toggle-container">
+                    <label class="switch">
+                        <input type="checkbox" id="devModeToggle" onchange="toggleDevMode()">
+                        <span class="slider round"></span>
+                    </label>
+                    <span class="dev-mode-label">Dev Mode</span>
+                </div>
+            </div>
+            <!-- Hidden prompt area -->
+            <div id="devPromptPanel" class="dev-prompt" style="display: none;">
+                <strong>Prompt used for generation:</strong>
+                <pre>{{ rawPrompt }}</pre>
+            </div>
+
             <div id="query-results">
                 <!-- Tab Navigation -->
                 <div class="tab">
