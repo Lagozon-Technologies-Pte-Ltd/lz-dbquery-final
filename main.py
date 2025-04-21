@@ -133,7 +133,20 @@ def download_as_excel(data: pd.DataFrame, filename: str = "data.xlsx"):
         data.to_excel(writer, index=False, sheet_name='Sheet1')
     output.seek(0)  # Reset the pointer to the beginning of the stream
     return output
-
+@app.get("/get_prompt")
+async def get_prompt(type: str):
+    if type == "interpretation":
+        filename = "chatbot_prompt.yaml"
+    elif type == "langchain":
+        filename = "final_prompt.txt"
+    else:
+        return "Invalid prompt type", 400
+    try:
+        with open(filename, "r") as f:
+            prompt = f.read()
+        return prompt
+    except FileNotFoundError:
+        return "Prompt file not found", 404
 def create_gauge_chart_json(title, value, min_val=0, max_val=100, color="blue", subtext="%"):
     """
     Creates a gauge chart using Plotly and returns it as a JSON string.

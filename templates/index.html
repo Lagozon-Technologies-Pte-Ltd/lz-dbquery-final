@@ -12,6 +12,7 @@
     <link rel="shortcut icon" href="static\favicon.png" type="image/x-icon">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 
     <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
 </head>
@@ -121,6 +122,13 @@
                             <span class="close-btn" onclick="closeSQLQueryPopup()">&times;</span>
                             <h2>SQL Query</h2>
                             <pre><code id="sql-query-content" class="language-sql"></code></pre>
+                        </div>
+                    </div>
+                    <div id="prompt-popup" class="modal">
+                        <div class="modal-content">
+                            <span class="close-btn" onclick="closepromptPopup()">&times;</span>
+                            <h2>Prompt</h2>
+                            <pre><code id="prompt-content" ></code></pre>
                         </div>
                     </div>
                     <div id="tables_container"></div>

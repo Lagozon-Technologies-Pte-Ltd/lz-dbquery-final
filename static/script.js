@@ -166,6 +166,7 @@ function toggleDevMode() {
             interpBtn.textContent = 'Interpretation Prompt';
             interpBtn.className = 'dev-mode-btn';  // Add class for styling
             xlsxbtn.appendChild(interpBtn);
+            interpBtn.onclick = showinterPrompt;
         }
         if (!langchainBtn) {
             langchainBtn = document.createElement('button');
@@ -173,6 +174,9 @@ function toggleDevMode() {
             langchainBtn.textContent = 'Langchain Prompt';
             langchainBtn.className = 'dev-mode-btn';  // Add class for styling
             xlsxbtn.appendChild(langchainBtn);
+            // Add click event to open popup with text file content
+            langchainBtn.onclick = showLangPromptPopup;
+
         }
     } else {
         // Remove buttons if they exist
@@ -636,3 +640,76 @@ function showSQLQueryPopup() {
 function closeSQLQueryPopup() {
     document.getElementById("sql-query-popup").style.display = "none";
 }
+function showLangPromptPopup() {
+    fetch('/static/final_prompt.txt')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
+            }
+            return response.text();
+        })
+        .then(text => {
+            // Set the fetched text into the popup content element
+            const popupContent = document.getElementById("prompt-content");
+            popupContent.textContent = text;
+
+            // Show the popup
+            document.getElementById("prompt-popup").style.display = "flex";
+
+            // Apply syntax highlighting if Prism is available
+            if (window.Prism) {
+                Prism.highlightAll();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading text file:', error);
+            alert('Failed to load prompt text.');
+        });
+}
+
+
+// Function to close the popup
+function closepromptPopup() {
+    document.getElementById("prompt-popup").style.display = "none";
+}
+function showinterPrompt() {
+    fetch('/static/chatbot_prompt.yaml')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
+            }
+            return response.text();
+        })
+        .then(text => {
+            // Parse YAML text to JavaScript object
+            let data;
+            try {
+                data = jsyaml.load(text);
+            } catch (e) {
+                console.error('YAML parsing error:', e);
+                alert('Failed to parse YAML content.');
+                return;
+            }
+
+            // Convert the object back to pretty JSON string for display
+            const prettyJson = JSON.stringify(data, null, 2);
+
+            // Set the pretty JSON into the popup content element
+            const popupContent = document.getElementById("prompt-content");
+            popupContent.textContent = prettyJson;
+
+            // Show the popup
+            document.getElementById("prompt-popup").style.display = "flex";
+
+            // Apply syntax highlighting if Prism is available
+            if (window.Prism) {
+                Prism.highlightAll();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading text file:', error);
+            alert('Failed to load prompt text.');
+        });
+}
+
+
