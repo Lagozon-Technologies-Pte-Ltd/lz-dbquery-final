@@ -238,7 +238,8 @@ async function sendMessage() {
         chatMessages.innerHTML += `
             <div class="message ai-message">
                 <div class="message-content">
-                    ${botResponse}
+                    LLM Interpretation: ${data.llm_response}<br>
+                    Insight: ${botResponse}
                 </div>
             </div>
         `;
